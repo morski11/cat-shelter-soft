@@ -1,8 +1,11 @@
 import http from 'http';
+import { catsHtml } from './src/cats.js'
 
-
-let server = http.createServer( (req, res) => {
-    res.write("asd");
+let server = http.createServer((req, res) => {
+    if (req.url == "/") {
+        res.writeHead(200, { "content-type": "text/html" });
+        res.write(catsHtml);
+    }
     res.end();
 });
 
