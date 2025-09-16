@@ -3,6 +3,22 @@ import { arr } from './src/cats.js';
 import fs from 'fs/promises';
 
 let server = http.createServer(async (req, res) => {
+    if (req.method == 'POST') {
+        let body = "";
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+
+        req.on("end", () => {
+            const params = new URLSearchParams(body);
+            const cat = Object.fromEntries(params.entries());
+            arr.push(cat);
+            res.writeHead(302, { "location": "/" });
+
+            res.end();
+        })
+        return;
+    }
     if (req.url == "/") {
         const homeHtml = await homeView();
         const cats = arr.map(c => catTemplate(c)).join("\n");
