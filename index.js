@@ -1,13 +1,13 @@
 import http from 'http';
-import { cats } from './src/cats.js';
+import { arr } from './src/cats.js';
 import fs from 'fs/promises';
 
 let server = http.createServer(async (req, res) => {
     if (req.url == "/") {
-        //const catsData = await fs.readFile('src/cats.js', {encoding: "utf-8"});
         const homeHtml = await homeView();
+        const cats = arr.map(c => catTemplate(c)).join("\n");
         res.writeHead(200, { "content-type": "text/html" });
-        res.write(homeHtml);
+        res.write(homeHtml.replace("{{kotki}}", cats));
     }
     else if (req.url == "/content/styles/site.css") {
         const siteCss = await fs.readFile('content/styles/site.css');
@@ -43,6 +43,21 @@ async function addCatView() {
     return html;
 }
 
+
+function catTemplate(cat) {
+    return `
+    <li>
+                    <img src="${cat.imageUrl}" alt="Black Cat">
+                    <h3>${cat.name}</h3>
+                    <p><span>Breed: </span>${cat.breed}</p>
+                    <p><span>Description: </span>${cat.description}.</p>
+                    <ul class="buttons">
+                        <li class="btn edit"><a href="">Change Info</a></li>
+                        <li class="btn delete"><a href="">New Home</a></li>
+                    </ul>
+                </li>
+                `
+}
 
 server.listen(5000);
 console.log('Server is listening of port 5000...');
