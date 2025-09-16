@@ -19,6 +19,11 @@ let server = http.createServer(async (req, res) => {
         res.writeHead(200, { "content-type": "text/html" });
         res.write(addBreedHtml);
     }
+    else if (req.url == "/cats/add-cat") {
+        const httmlAddCat = await addCatView();
+        res.writeHead(200, { "content-type": "text/html" });
+        res.write(httmlAddCat);
+    }
     res.end();
 });
 
@@ -30,6 +35,11 @@ async function homeView() {
 
 async function addBreedView() {
     const html = await fs.readFile(`views/addBreed.html`, { encoding: "utf-8" });
+    return html;
+}
+
+async function addCatView() {
+    const html = await fs.readFile(`views/addCat.html`, { encoding: "utf-8" });
     return html;
 }
 
